@@ -25,4 +25,13 @@ public class TodoController {
         return todoService.getTodosBySlice(page, size);
     }
 
+    // cursor 방식
+    // cursorId는 이전 응답에서 받은 마지막 todos의 id. 첫 요청은 생략하거나 null로 보냄.
+    @GetMapping("/todos/cursor")
+    public Slice<Todo> getTodosByCursor(
+            @RequestParam(required = false) Long cursorId,
+            @RequestParam(defaultValue = "10") int size) {
+        return todoService.getTodosByCursor(cursorId, size);
+    }
+
 }

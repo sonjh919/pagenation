@@ -24,6 +24,17 @@ public class TodoService {
         Pageable pageable = PageRequest.of(page, size);
         return todoRepository.findSliceBy(pageable);
     }
-    
+
+    /**
+     * 커서 기반 페이지네이션 조회
+     * @param cursorId 마지막 조회된 Todo의 id, 처음에는 null
+     * @param size 페이지 크기
+     * @return Slice<Todo> - 다음 페이지 존재 여부 확인 가능
+     */
+    public Slice<Todo> getTodosByCursor(Long cursorId, int size) {
+        Pageable pageable = PageRequest.of(0, size);  // page 번호 무시, 항상 첫 페이지 요청
+        return todoRepository.findByIdLessThan(cursorId, pageable);
+    }
+
 
 }
