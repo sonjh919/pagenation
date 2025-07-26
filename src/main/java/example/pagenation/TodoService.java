@@ -1,5 +1,6 @@
 package example.pagenation;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,18 @@ public class TodoService {
     public Slice<Todo> getTodosByCursor(Long cursorId, int size) {
         Pageable pageable = PageRequest.of(0, size);  // page 번호 무시, 항상 첫 페이지 요청
         return todoRepository.findByIdLessThan(cursorId, pageable);
+    }
+
+    /**
+     * 복합 커서 기반 페이지네이션
+     * @param cursorCreatedAt 마지막 항목의 createdAt (null이면 첫 페이지)
+     * @param cursorId 마지막 항목의 id (null이면 첫 페이지)
+     * @param size 페이지 크기
+     * @return Slice<Todo>
+     */
+    public Slice<Todo> getTodosByCompositeCursor(LocalDateTime cursorCreatedAt, Long cursorId, int size) {
+        Pageable pageable = PageRequest.of(0, size);
+        return todoRepository.findByCreatedAtAndIdLessThan(cursorCreatedAt, cursorId, pageable);
     }
 
 
